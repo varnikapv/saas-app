@@ -1,26 +1,16 @@
 'use server'
 
-interface CompanionData {
-    name: string;
-    subject: string;
-    topic: string;
-    voice: string;
-    style: string;
-    duration: number;
-}
+import { auth } from "@clerk/nextjs/server";
+import { createSupabaseClient } from "../supabase";
 
-export async function createCompanion(data: CompanionData) {
-    try {
-        // TODO: Add your database logic here
-        // For now, returning a mock response
-        const companion = {
-            id: Date.now().toString(),
-            ...data,
-        };
-        
-        return companion;
-    } catch (error) {
-        console.error('Error creating companion:', error);
-        return null;
-    }
+export const createCompanion = async (FormData: CreateCompanion) => {
+    const { userId: author } = await auth();
+    const supabase =  createSupabaseClient();
+
+    const { data, error } = await supabase.from('companions').insert({
+        ...FormData,author
+    }).select();
+
+    if(error || !data) throw new Error(error?.message ||  'Failed to create a companion');
+    return data[0];
 }
