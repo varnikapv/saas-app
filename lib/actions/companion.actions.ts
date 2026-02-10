@@ -46,7 +46,7 @@ export const getCompanion = async (id: string) => {
         .select()
         .eq('id', id);
 
-    if(error) return console.log(error);
+    if(error) throw new Error(error.message);
 
     return data[0];
 }
@@ -107,12 +107,12 @@ export const newCompanionPermissions = async () => {
     const { userId, has } = await auth();
     const supabase = createSupabaseClient();
 
-    let limit = 0;
+    let limit = 3;
 
     if(has({ plan: 'pro' })) {
         return true;
-    } else if(has({ feature: "3_companion_limit" })) {
-        limit = 3;
+    } else if(has({ feature: "5_companion_limit" })) {
+        limit = 5;
     } else if(has({ feature: "10_companion_limit" })) {
         limit = 10;
     }
@@ -133,7 +133,6 @@ export const newCompanionPermissions = async () => {
     }
 }
 
-// Bookmarks
 export const addBookmark = async (companionId: string, path: string) => {
   const { userId } = await auth();
   if (!userId) return;
@@ -145,8 +144,6 @@ export const addBookmark = async (companionId: string, path: string) => {
   if (error) {
     throw new Error(error.message);
   }
-  // Revalidate the path to force a re-render of the page
-
   revalidatePath(path);
   return data;
 };
@@ -171,11 +168,37 @@ export const getBookmarkedCompanions = async (userId: string) => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("bookmarks")
-    .select(`companions:companion_id (*)`) // Notice the (*) to get all the companion data
+    .select(`companions:companion_id (*)`)
     .eq("user_id", userId);
   if (error) {
     throw new Error(error.message);
   }
-  // We don't need the bookmarks data, so we return only the companions
+
   return data.map(({ companions }) => companions);
+};
+
+export const getUserBookmarkIds = async (userId: string) => {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .select("companion_id")
+    .eq("user_id", userId);
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data.map((bookmark) => bookmark.companion_id);
+};
+
+export const isBookmarked = async (companionId: string, userId: string) => {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .select("id")
+    .eq("companion_id", companionId)
+    .eq("user_id", userId)
+    .single();
+  if (error && error.code !== 'PGRST116') {
+    throw new Error(error.message);
+  }
+  return !!data;
 };
