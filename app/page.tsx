@@ -5,6 +5,8 @@ import { getAllCompanions, getUserSessions, getUserBookmarkIds } from '@/lib/act
 import { getSubjectColor } from '@/lib/utils';
 import { currentUser } from '@clerk/nextjs/server';
 
+export const dynamic = 'force-dynamic';
+
 const Page = async () => {
     const companions = await getAllCompanions({ limit: 3 });
     const user = await currentUser();
