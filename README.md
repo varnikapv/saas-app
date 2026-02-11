@@ -1,4 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Cover Image](/public/images/image.jpeg)
+
+# AI Companion SaaS Platform
+
+An interactive educational platform that enables users to create and interact with AI-powered voice companions. Built with Next.js, this application allows learners to engage with virtual tutors across various subjects through voice and text conversations.
+
+## Features
+
+- **🤖 AI Companions Library**: Browse and interact with pre-built educational companions
+- **✨ Create Custom Companions**: Design personalized AI tutors tailored to specific subjects and topics
+- **🔊 Voice Integration**: Real-time voice conversations powered by Vapi AI
+- **📚 Subject Filtering**: Organized by subjects and topics for easy discovery
+- **🔖 Bookmarking**: Save favorite companions for quick access
+- **🔐 Secure Authentication**: User management via Clerk
+- **💳 Subscription Model**: Premium features with subscription support
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Authentication**: Clerk
+- **Database**: Supabase
+- **Voice AI**: Vapi AI
+- **Styling**: Tailwind CSS
+- **Forms**: React Hook Form + Zod
+- **Monitoring**: Sentry
 
 ## Getting Started
 
